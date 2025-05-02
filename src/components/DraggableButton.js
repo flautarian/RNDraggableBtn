@@ -1,4 +1,5 @@
 import { useRef, useEffect, useCallback } from 'react';
+import { Dimensions } from 'react-native';
 import { PanResponder } from 'react-native';
 import { GestureDetector, GestureHandlerRootView } from 'react-native-gesture-handler';
 import Animated, {
@@ -12,7 +13,6 @@ const INITIAL_POSITION = "initial-position";
 const NONE = "none";
 const CLOSEST_AXIS_X = "closest-axis-x";
 const CLOSEST_AXIS_Y = "closest-axis-y";
-const CLOSEST_AXIS = "closest-axis";
 
 export const DraggableButton = ({
   onArrangeEnd = null,
@@ -150,7 +150,7 @@ export const DraggableButton = ({
     else if (returnMode === NONE) {
       // do nothing
     }
-    else if (returnMode === CLOSEST_AXIS_X || returnMode === CLOSEST_AXIS) {
+    if (returnMode === CLOSEST_AXIS_X) {
       // return to the closes border window in x axis and preserve y axis
       // calc the distance to check if the button is closer to 0 or width
       if(position.x.value > width / 2) {
@@ -160,7 +160,7 @@ export const DraggableButton = ({
         position.x.value = withSpring(0 + dimensions.current.width, returnSpringConfig);
       }
     }
-    else if (returnMode === CLOSEST_AXIS_Y || returnMode === CLOSEST_AXIS) {
+    if (returnMode === CLOSEST_AXIS_Y) {
       // return to the closes border window in y axis and preserve x axis
       // calc the distance to check if the button is closer to 0 or height
       if(position.y.value > height / 2) {

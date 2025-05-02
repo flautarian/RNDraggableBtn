@@ -22,7 +22,7 @@ npm install react-native-reanimated react-native-gesture-handler
 | `onArrangeEnd`     | `function` | `null`              | Callback triggered when the drag ends. Receives the final `x` and `y` positions. |
 | `onArrangeInit`    | `function` | `null`              | Callback triggered when the drag starts.                                   |
 | `gesture`          | `object`   | `null`              | Gesture object for handling tap gestures.                                  |
-| `returnMode`       | `string`   | `"initial-position"`| Determines the button's return behavior after drag. Options: `initial-position`, `none`, `closest-axis-x`, `closest-axis-y`, `closest-axis`. |
+| `returnMode`       | `string`   | `"initial-position"`| Determines the button's return behavior after drag. Options: `initial-position`, `none`, `closest-axis-x`, `closest-axis-y`. |
 | `initialPosition`  | `object`   | `{ x: 0, y: 0 }`    | Initial position of the button. Must include `x` and `y` values.           |
 | `children`         | `node`     | `null`              | Content to render inside the draggable button.                             |
 | `canMove`          | `boolean`  | `true`              | Enables or disables drag functionality.                                    |
@@ -91,7 +91,6 @@ const tapGesture = Gesture.Tap().onEnd(() => console.log('Tapped!'));
 - **`none`**: Stays at the dropped position.
 - **`closest-axis-x`**: Snaps to the closest horizontal edge.
 - **`closest-axis-y`**: Snaps to the closest vertical edge.
-- **`closest-axis`**: Snaps to the closest edge (horizontal or vertical).
 
 ## Notes
 
