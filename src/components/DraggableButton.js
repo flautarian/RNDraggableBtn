@@ -25,8 +25,8 @@ export const DraggableButton = ({
   blockDragX = false,
   blockDragY = false,
   animateButton = false,
-  limitDistance = 0,
-  minLimitDistance = 0,
+  maxDistance = 0,
+  minDistance = 0,
   style = {},
 }) => {
   
@@ -90,24 +90,24 @@ export const DraggableButton = ({
     const { width, height } = dimensions.current;
     let result = { x: moveX - (width * scale.value) / 2, y: moveY - (height * scale.value) / 2 };
 
-    if (limitDistance !== 0) {
+    if (maxDistance !== 0) {
       // Calculate the distance from the initial position
       const distanceX = result.x - initialPositionRef.current.x;
       const distanceY = result.y - initialPositionRef.current.y;
 
       // Limit the movement in the x direction
-      if (Math.abs(distanceX) > limitDistance) {
-        result.x = initialPositionRef.current.x + (distanceX > 0 ? limitDistance : -limitDistance);
+      if (Math.abs(distanceX) > maxDistance) {
+        result.x = initialPositionRef.current.x + (distanceX > 0 ? maxDistance : -maxDistance);
       }
 
       // Limit the movement in the y direction
-      if (Math.abs(distanceY) > limitDistance) {
-        result.y = initialPositionRef.current.y + (distanceY > 0 ? limitDistance : -limitDistance);
+      if (Math.abs(distanceY) > maxDistance) {
+        result.y = initialPositionRef.current.y + (distanceY > 0 ? maxDistance : -maxDistance);
       }
     }
 
     return result;
-  }, [dimensions, limitDistance, scale]);
+  }, [dimensions, maxDistance, scale]);
 
   // handle drag function
   const onDrag = useCallback((gestureState) => {
@@ -126,16 +126,16 @@ export const DraggableButton = ({
     // send signal to create new object in panel
     const newPos = getNewPosition(gestureState);
 
-    let movedEnough = minLimitDistance == 0;
+    let movedEnough = minDistance == 0;
 
     // Check if the new position is different enough from the initial position
-    if (minLimitDistance !== 0) {
+    if (minDistance !== 0) {
       // Calculate the distance from the initial position
       const distanceX = Math.abs(position.x.value) - Math.abs(initialPositionRef.current.x);
       const distanceY = Math.abs(position.y.value) - Math.abs(initialPositionRef.current.y);
       // Limit the movement in the direction
       // console.log("DistanceX", distanceX, "DistanceY", distanceY, "MinLimitDistance", minLimitDistance);
-      movedEnough = Math.abs(distanceX) > minLimitDistance || Math.abs(distanceY) > minLimitDistance;
+      movedEnough = Math.abs(distanceX) > minDistance || Math.abs(distanceY) > minDistance;
     }
     
     // if moved enough, call onArrangeEnd function
@@ -174,7 +174,7 @@ export const DraggableButton = ({
     // Reset scale
     if (animateButton)
       scale.value = withSpring(1, scaleSpringConfig);
-  }, [position, getNewPosition, initialPositionRef, limitDistance, onArrangeEnd, animateButton, returnSpringConfig, scaleSpringConfig]);
+  }, [position, getNewPosition, initialPositionRef, maxDistance, onArrangeEnd, animateButton, returnSpringConfig, scaleSpringConfig]);
 
   // animated style
   const dragAnimatedStyle = useAnimatedStyle(() => ({

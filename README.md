@@ -1,146 +1,104 @@
-# DraggableContainer
+# DraggableButton Component
 
-`DraggableContainer` is a versatile React Native component that allows you to create draggable, resizable, and rotatable containers. It's built using `react-native-reanimated` for smooth animations and `react-native-feather` for icons. This component is perfect for applications that require dynamic and interactive UI elements.
-
-## Features
-
-- **Drag and Drop**: Easily move the container around the screen.
-- **Resize**: Adjust the width and height of the container using handles.
-- **Rotate**: Rotate the container to any angle.
-- **Customizable**: Highly customizable with various props to control behavior and appearance.
-- **Callbacks**: Provides callbacks for various events like drag start, drag end, resize start, resize end, etc.
+The `DraggableButton` is a customizable React Native component that allows users to drag and drop a button within a defined area. It supports animations, gesture handling, and configurable behavior for drag-and-drop interactions.
 
 ## Installation
 
-To use the `DraggableContainer` component, you need to install the following dependencies:
+To use this component, ensure you have the following dependencies installed:
 
 - `react-native-reanimated`
-- `react-native-feather`
+- `react-native-gesture-handler`
 
-Make sure you have `react-native-gesture-handler` installed and configured, as it is a peer dependency of `react-native-reanimated`.
+Install them using:
+
+```bash
+npm install react-native-reanimated react-native-gesture-handler
+```
 
 ## Props
 
-The `DraggableContainer` component accepts the following props:
+| Prop Name         | Type       | Default Value       | Description                                                                 |
+|--------------------|------------|---------------------|-----------------------------------------------------------------------------|
+| `onArrangeEnd`     | `function` | `null`              | Callback triggered when the drag ends. Receives the final `x` and `y` positions. |
+| `onArrangeInit`    | `function` | `null`              | Callback triggered when the drag starts.                                   |
+| `gesture`          | `object`   | `null`              | Gesture object for handling tap gestures.                                  |
+| `returnMode`       | `string`   | `"initial-position"`| Determines the button's return behavior after drag. Options: `initial-position`, `none`, `closest-axis-x`, `closest-axis-y`, `closest-axis`. |
+| `initialPosition`  | `object`   | `{ x: 0, y: 0 }`    | Initial position of the button. Must include `x` and `y` values.           |
+| `children`         | `node`     | `null`              | Content to render inside the draggable button.                             |
+| `canMove`          | `boolean`  | `true`              | Enables or disables drag functionality.                                    |
+| `blockDragX`       | `boolean`  | `false`             | Prevents movement along the X-axis.                                        |
+| `blockDragY`       | `boolean`  | `false`             | Prevents movement along the Y-axis.                                        |
+| `animateButton`    | `boolean`  | `false`             | Enables scaling animation during drag.                                     |
+| `maxDistance`      | `number`   | `0`                 | Maximum distance the button can move from its initial position.            |
+| `minDistance`      | `number`   | `0`                 | Minimum distance required to trigger the `onArrangeEnd` callback.          |
+| `style`            | `object`   | `{}`                | Custom styles for the button.                                              |
 
-| Prop               | Type      | Default     | Description                                                                 |
-|--------------------|-----------|-------------|-----------------------------------------------------------------------------|
-| `x`                | `number`  | `0`         | Initial x position of the container.                                       |
-| `y`                | `number`  | `0`         | Initial y position of the container.                                       |
-| `height`           | `number`  | `100`       | Initial height of the container.                                          |
-| `minHeight`        | `number`  | `25`        | Minimum height of the container.                                          |
-| `maxHeight`        | `number`  | `-`         | Maximum height of the container.                                          |
-| `width`            | `number`  | `100`       | Initial width of the container.                                           |
-| `minWidth`         | `number`  | `25`        | Minimum width of the container.                                           |
-| `maxWidth`         | `number`  | `-`         | Maximum width of the container.                                           |
-| `rotation`         | `number`  | `0`         | Initial rotation of the container in degrees.                              |
-| `resizeMode`       | `string`  | `"4-squares"` | Resize mode: "4-squares" or "1-square".                                 |
-| `index`            | `number`  | `-`         | Index of the container (useful for identifying the container).            |
-| `selected`         | `boolean` | `false`     | Whether the container is selected.                                        |
-| `draggable`        | `boolean` | `true`      | Whether the container can be dragged. Move button is enabled if this function is defined.|
-| `rotable`          | `boolean` | `true`      | Whether the container can be rotated. Drag button is enabled if this function is defined.|
-| `resizable`        | `boolean` | `true`      | Whether the container can be resized. Resize buttons are enabled if this function is defined.|
-| `onSelect`         | `function`| `-`         | Callback when the container is selected.                                  |
-| `onDelete`         | `function`| `-`         | Callback when the delete button is pressed, delete button is enabled if this function is defined.|
-| `onDragStart`      | `function`| `-`         | Callback when dragging starts.                                            |
-| `onDragRelease`    | `function`| `-`         | Callback when dragging ends.                                              |
-| `onRotateStart`    | `function`| `-`         | Callback when rotation starts.                                            |
-| `onRotateRelease`  | `function`| `-`         | Callback when rotation ends.                                              |
-| `onResizeStart`    | `function`| `-`         | Callback when resizing starts.                                            |
-| `onResizeRelease`  | `function`| `-`         | Callback when resizing ends.                                              |
-| `children`         | `node`    | `-`         | Child components to be rendered inside the container.                      |
+## Usage
 
-## Example Usage
-
-Here's an example of how to use the `DraggableContainer` component:
+### Basic Example
 
 ```jsx
-import React, { useState } from 'react';
-import { View, Text } from 'react-native';
-import { DraggableContainer } from './path-to-your-component'; // Adjust the path as necessary
+import React from 'react';
+import { DraggableButton } from './DraggableButton';
+import { Text } from 'react-native';
 
 const App = () => {
-  const [selectedIndex, setSelectedIndex] = useState(null);
-
-  const handleSelect = (index) => {
-    setSelectedIndex(index);
-  };
-
-  const handleDelete = (index) => {
-    // Implement your delete logic here
-  };
-
   return (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <DraggableContainer
-        style={{ width: 100, height: 100, backgroundColor: 'blue' }}
-        x={100}
-        y={100}
-        rotation={0}
-        minWidth={50}
-        minHeight={50}
-        maxWidth={300}
-        maxHeight={300}
-        selected={true}
-        resizeMode="4-squares"
-        onDragEnd={(position) => {
-          console.log('Drag ended at:', position);
-        }}
-        onDragStart={() => {
-          console.log('Drag started');
-        }}
-        onDragRelease={(position) => {
-          console.log('Dragging at:', position);
-        }}
-        onRotateStart={() => {
-          console.log('Rotation started');
-        }
-        }
-        onRotateRelease={(rotation) => {
-          console.log('Rotation ended at:', rotation);
-        }}
-        onResizeStart={() => {
-          console.log('Resize started');
-        }
-        }
-        onResizeRelease={(size) => {
-          console.log('Resizing ended at:', size);
-        }}
-        onSelect={() => {
-          console.log('Selected');
-        }
-        }
-        onDelete={() => {
-          console.log('Deleted');
-        }
-        }
-      >
-        <Text class={styles.text}>Houdy! I can move</Text>
-
-      </DraggableContainer>
-    </View>
+    <DraggableButton
+      initialPosition={{ x: 50, y: 100 }}
+      onArrangeEnd={(x, y) => console.log(`Dragged to: ${x}, ${y}`)}
+    >
+      <Text>Drag Me</Text>
+    </DraggableButton>
   );
 };
 
 export default App;
 ```
 
-## 4-squares mode
+### Example with Return Modes
 
-[4-squares-demo.webm](https://github.com/user-attachments/assets/687ee582-c747-4fb5-aaa3-a8b2782eb462)
+```jsx
+<DraggableButton
+  initialPosition={{ x: 100, y: 200 }}
+  returnMode="closest-axis"
+  maxDistance={150}
+  animateButton={true}
+  onArrangeEnd={(x, y) => console.log(`Dropped at: ${x}, ${y}`)}
+>
+  <Text>Drag Me</Text>
+</DraggableButton>
+```
 
-## 1-square mode
+### Example with Gesture Handling
 
-[1-square.webm](https://github.com/user-attachments/assets/aa2822e0-d18d-4726-95ee-914cea914f82)
+```jsx
+import { Gesture } from 'react-native-gesture-handler';
 
+const tapGesture = Gesture.Tap().onEnd(() => console.log('Tapped!'));
 
-## Contributing
+<DraggableButton
+  initialPosition={{ x: 0, y: 0 }}
+  gesture={tapGesture}
+>
+  <Text>Tap or Drag Me</Text>
+</DraggableButton>
+```
 
-Contributions are welcome! Please open an issue or submit a pull request.
+## Return Modes
+
+- **`initial-position`**: Returns to the initial position after drag.
+- **`none`**: Stays at the dropped position.
+- **`closest-axis-x`**: Snaps to the closest horizontal edge.
+- **`closest-axis-y`**: Snaps to the closest vertical edge.
+- **`closest-axis`**: Snaps to the closest edge (horizontal or vertical).
+
+## Notes
+
+- Ensure the `initialPosition` prop is within the screen bounds.
+- Use `maxDistance` and `minDistance` to control drag limits and trigger conditions.
+- For gesture handling, wrap the component with `GestureHandlerRootView`.
 
 ## License
 
-This project is licensed under the MIT License.
-
-
-
+This component is open-source and available under the MIT License.  
