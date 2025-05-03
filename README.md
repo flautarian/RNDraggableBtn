@@ -22,9 +22,12 @@ npm install react-native-reanimated react-native-gesture-handler
 | `onArrangeEnd`     | `function` | `null`              | Callback triggered when the drag ends. Receives the final `x` and `y` positions. |
 | `onArrangeInit`    | `function` | `null`              | Callback triggered when the drag starts.                                   |
 | `gesture`          | `object`   | `null`              | Gesture object for handling tap gestures.                                  |
-| `returnMode`       | `string`   | `"initial-position"`| Determines the button's return behavior after drag. Options: `initial-position`, `none`, `closest-axis-x`, `closest-axis-y`. |
+| `returnMode`       | `string`   | `"initial-position"`| Determines the button's return behavior after drag. Options: `initial-position`, `none`, `closest-axis-x`, `closest-axis-y`, `closest-axis`. |
 | `initialPosition`  | `object`   | `{ x: 0, y: 0 }`    | Initial position of the button. Must include `x` and `y` values.           |
 | `children`         | `node`     | `null`              | Content to render inside the draggable button.                             |
+| `scaleCustomConfig`         | `object`     | `null`              | Custom spring animation config object to customize the scale of the button when animation is enabled. More info in reanimated config section.                             |
+| `dragCustomConfig`         | `object`     | `null`              | Custom spring animation config object to customize the drag animation when button is begin dragged. More info in reanimated config section.                             |
+| `returnCustomConfig`         | `object`     | `null`              | Custom spring animation config object to customize the return animation when button is returning to the original position if is configured to return to. More info in reanimated config section.                             |
 | `canMove`          | `boolean`  | `true`              | Enables or disables drag functionality.                                    |
 | `blockDragX`       | `boolean`  | `false`             | Prevents movement along the X-axis.                                        |
 | `blockDragY`       | `boolean`  | `false`             | Prevents movement along the Y-axis.                                        |
@@ -56,11 +59,71 @@ const App = () => {
 export default App;
 ```
 
+### Advanced Example
+
+```jsx
+import { Dimensions, Text, View } from 'react-native';
+import { DraggableButton } from 'react-native-draggable-button';
+
+export default function App() {
+
+  const { height, width } = Dimensions.get('window');
+
+  const customDragConfig = {
+    duration: 1500,
+    dampingRatio: 0.7,
+    stiffness: 100,
+  };
+  return (
+    <View style={{ flex: 1 }}>
+      <DraggableButton
+        style={{ width: 50, height: 50, backgroundColor: 'red', borderRadius: 50, textAlign: 'center', flex: 1, cursor: 'pointer' }}
+        initialPosition={{ x: width / 2, y: height / 2 }}
+        returnMode='initial-position'
+        dragCustomConfig={customDragConfig}
+        returnCustomSpringConfig={customDragConfig}
+        scaleCustomConfig={customDragConfig}
+        animateButton={true}
+        onArrangeInit={() => {
+          console.log('Drag started');
+        }}
+        onArrangeEnd={(x, y) => {
+          console.log('Dragging at:', x, y);
+        }}>
+        <Text selectable={false} style={{ fontSize: 30, width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>😊</Text>
+      </DraggableButton>
+    </View>
+  );
+}
+```
+
 ### Example with Return Modes
 
 ```jsx
 <DraggableButton
   initialPosition={{ x: 100, y: 200 }}
+  returnMode="closest-axis"
+  maxDistance={150}
+  animateButton={true}
+  onArrangeEnd={(x, y) => console.log(`Dropped at: ${x}, ${y}`)}
+>
+  <Text>Drag Me</Text>
+</DraggableButton>
+```
+
+### Example with Custom spring animation config on drag button
+
+```jsx
+
+const dragCustomSpringConfig = dragCustomConfig || {
+    duration: 1500,
+    dampingRatio: 0.5,
+    stiffness: 100,
+  };
+
+<DraggableButton
+  initialPosition={{ x: 100, y: 200 }}
+  dragCustomConfig={dragCustomSpringConfig}
   returnMode="closest-axis"
   maxDistance={150}
   animateButton={true}
@@ -88,9 +151,20 @@ const tapGesture = Gesture.Tap().onEnd(() => console.log('Tapped!'));
 ## Return Modes
 
 - **`initial-position`**: Returns to the initial position after drag.
+
+
 - **`none`**: Stays at the dropped position.
+
+
 - **`closest-axis-x`**: Snaps to the closest horizontal edge.
+
+
 - **`closest-axis-y`**: Snaps to the closest vertical edge.
+
+
+- **`closest-axis`**: Snaps to the closest edge.
+
+
 
 ## Notes
 

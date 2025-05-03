@@ -13,11 +13,15 @@ const INITIAL_POSITION = "initial-position";
 const NONE = "none";
 const CLOSEST_AXIS_X = "closest-axis-x";
 const CLOSEST_AXIS_Y = "closest-axis-y";
+const CLOSEST_AXIS = "closest-axis";
 
 export const DraggableButton = ({
   onArrangeEnd = null,
   onArrangeInit = null,
   gesture = null,
+  scaleCustomConfig = null,
+  dragCustomConfig = null,
+  returnCustomSpringConfig = null,
   returnMode = INITIAL_POSITION,
   initialPosition,
   children,
@@ -29,7 +33,7 @@ export const DraggableButton = ({
   minDistance = 0,
   style = {},
 }) => {
-  
+
   const { width, height } = Dimensions.get('window');
 
   const initialPositionRef = useRef({ x: initialPosition.x, y: initialPosition.y });
@@ -42,15 +46,15 @@ export const DraggableButton = ({
   // Sync the internal position with the initial position prop
   useEffect(() => {
     initialPositionRef.current = { x: initialPosition.x, y: initialPosition.y };
-    position.x.value = withSpring(initialPosition.x);
-    position.y.value = withSpring(initialPosition.y);
+    position.x.value = withSpring(initialPosition.x, dragSpringConfig);
+    position.y.value = withSpring(initialPosition.y, dragSpringConfig);
   }, [initialPosition]);
 
   const scale = useSharedValue(1);
 
   const dimensions = useRef({ width: 0, height: 0 });
 
-  const returnSpringConfig = {
+  const returnSpringConfig = returnCustomSpringConfig || {
     duration: 1000,
     dampingRatio: 0.7,
     stiffness: 100,
@@ -60,7 +64,13 @@ export const DraggableButton = ({
     reduceMotion: ReduceMotion.System,
   };
 
-  const scaleSpringConfig = {
+  const dragSpringConfig = dragCustomConfig || {
+    duration: 150,
+    dampingRatio: 0.7,
+    stiffness: 100,
+  };
+
+  const scaleSpringConfig = scaleCustomConfig || {
     duration: 150,
     dampingRatio: 0.7,
     stiffness: 100,
@@ -116,9 +126,9 @@ export const DraggableButton = ({
 
     const newPos = getNewPosition(gestureState);
     if (!blockDragX)
-      position.x.value = newPos.x;
+      position.x.value = withSpring(newPos.x, dragSpringConfig);
     if (!blockDragY)
-      position.y.value = newPos.y;
+      position.y.value = withSpring(newPos.y, dragSpringConfig);
   }, [position, getNewPosition, scale, animateButton, blockDragX, blockDragY, scaleSpringConfig]);
 
   // end drag function
@@ -137,7 +147,7 @@ export const DraggableButton = ({
       // console.log("DistanceX", distanceX, "DistanceY", distanceY, "MinLimitDistance", minLimitDistance);
       movedEnough = Math.abs(distanceX) > minDistance || Math.abs(distanceY) > minDistance;
     }
-    
+
     // if moved enough, call onArrangeEnd function
     if (!!onArrangeEnd && movedEnough)
       onArrangeEnd(newPos.x, newPos.y);
@@ -153,24 +163,53 @@ export const DraggableButton = ({
     if (returnMode === CLOSEST_AXIS_X) {
       // return to the closes border window in x axis and preserve y axis
       // calc the distance to check if the button is closer to 0 or width
-      if(position.x.value > width / 2) {
+      if (position.x.value > width / 2) {
         position.x.value = withSpring(width - dimensions.current.width, returnSpringConfig);
       }
       else {
-        position.x.value = withSpring(0 + dimensions.current.width, returnSpringConfig);
+        position.x.value = withSpring(0, returnSpringConfig);
       }
     }
     if (returnMode === CLOSEST_AXIS_Y) {
       // return to the closes border window in y axis and preserve x axis
       // calc the distance to check if the button is closer to 0 or height
-      if(position.y.value > height / 2) {
+      if (position.y.value > height / 2) {
         position.y.value = withSpring(height - dimensions.current.height, returnSpringConfig);
       }
       else {
-        position.y.value = withSpring(0 + dimensions.current.height, returnSpringConfig);
+        position.y.value = withSpring(0, returnSpringConfig);
       }
     }
-
+    if (returnMode === CLOSEST_AXIS) {
+      // return the closest border window in x or y axis, will go only to the closest axis
+      // calc the distance to check if the button is closer to 0 or width
+      // calc diff among 0 and position x
+      let x0 = Math.abs(position.x.value);
+      let x1 = Math.abs(width - dimensions.current.width - position.x.value);
+      let y0 = Math.abs(position.y.value);
+      let y1 = Math.abs(height - dimensions.current.height - position.y.value);
+      // the lowest distance will be the closest axis
+      let xDistance = Math.min(x0, x1);
+      let yDistance = Math.min(y0, y1);
+      if (xDistance < yDistance) {
+        // return to the closes border window in x axis and preserve y axis
+        if (position.x.value > width / 2) {
+          position.x.value = withSpring(width - dimensions.current.width, returnSpringConfig);
+        }
+        else {
+          position.x.value = withSpring(0, returnSpringConfig);
+        }
+      }
+      else {
+        // return to the closes border window in y axis and preserve x axis
+        if (position.y.value > height / 2) {
+          position.y.value = withSpring(height - dimensions.current.height, returnSpringConfig);
+        }
+        else {
+          position.y.value = withSpring(0, returnSpringConfig);
+        }
+      }
+    }
     // Reset scale
     if (animateButton)
       scale.value = withSpring(1, scaleSpringConfig);
