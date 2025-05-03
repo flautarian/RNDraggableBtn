@@ -1,13 +1,13 @@
-# DraggableButton Component
+# 🎨DraggableButton Component
 
 The `DraggableButton` is a customizable React Native component that allows users to drag and drop a button within a defined area. It supports animations, gesture handling, and configurable behavior for drag-and-drop interactions.
 
-## Installation
+## 🛠️Installation
 
 To use this component, ensure you have the following dependencies installed:
 
-- `react-native-reanimated`
-- `react-native-gesture-handler`
+- <a href="https://docs.swmansion.com/react-native-reanimated/">`react-native-reanimated`</a>
+- <a href="https://docs.swmansion.com/react-native-gesture-handler/docs/">`react-native-gesture-handler`</a>
 
 Install them using:
 
@@ -15,7 +15,7 @@ Install them using:
 npm install react-native-reanimated react-native-gesture-handler
 ```
 
-## Props
+## ⚙️Props
 
 | Prop Name         | Type       | Default Value       | Description                                                                 |
 |--------------------|------------|---------------------|-----------------------------------------------------------------------------|
@@ -25,9 +25,9 @@ npm install react-native-reanimated react-native-gesture-handler
 | `returnMode`       | `string`   | `"initial-position"`| Determines the button's return behavior after drag. Options: `initial-position`, `none`, `closest-axis-x`, `closest-axis-y`, `closest-axis`. |
 | `initialPosition`  | `object`   | `{ x: 0, y: 0 }`    | Initial position of the button. Must include `x` and `y` values.           |
 | `children`         | `node`     | `null`              | Content to render inside the draggable button.                             |
-| `scaleCustomConfig`         | `object`     | `null`              | Custom spring animation config object to customize the scale of the button when animation is enabled. More info in reanimated config section.                             |
-| `dragCustomConfig`         | `object`     | `null`              | Custom spring animation config object to customize the drag animation when button is begin dragged. More info in reanimated config section.                             |
-| `returnCustomConfig`         | `object`     | `null`              | Custom spring animation config object to customize the return animation when button is returning to the original position if is configured to return to. More info in reanimated config section.                             |
+| `scaleCustomConfig`         | `object`     | `null`              | Custom spring animation config object to customize the scale of the button when animation is enabled. More info in <a href="https://docs.swmansion.com/react-native-reanimated/docs/animations/withSpring/#config-">reanimated config section</a>.                             |
+| `dragCustomConfig`         | `object`     | `null`              | Custom spring animation config object to customize the drag animation when button is begin dragged. More info in <a href="https://docs.swmansion.com/react-native-reanimated/docs/animations/withSpring/#config-">reanimated config section</a>.                             |
+| `returnCustomConfig`         | `object`     | `null`              | Custom spring animation config object to customize the return animation when button is returning to the original position if is configured to return to. More info in <a href="https://docs.swmansion.com/react-native-reanimated/docs/animations/withSpring/#config-">reanimated config section</a>.                             |
 | `canMove`          | `boolean`  | `true`              | Enables or disables drag functionality.                                    |
 | `blockDragX`       | `boolean`  | `false`             | Prevents movement along the X-axis.                                        |
 | `blockDragY`       | `boolean`  | `false`             | Prevents movement along the Y-axis.                                        |
@@ -36,7 +36,7 @@ npm install react-native-reanimated react-native-gesture-handler
 | `minDistance`      | `number`   | `0`                 | Minimum distance required to trigger the `onArrangeEnd` callback.          |
 | `style`            | `object`   | `{}`                | Custom styles for the button.                                              |
 
-## Usage
+## 🎬Usage
 
 ### Basic Example
 
@@ -132,6 +132,9 @@ const dragCustomSpringConfig = dragCustomConfig || {
   <Text>Drag Me</Text>
 </DraggableButton>
 ```
+<p align="center">
+<img src="https://github.com/user-attachments/assets/53c36eee-0747-4eb1-bae8-55cd9a686412" width=400px center>
+</p>
 
 ### Example with Gesture Handling
 
@@ -148,30 +151,46 @@ const tapGesture = Gesture.Tap().onEnd(() => console.log('Tapped!'));
 </DraggableButton>
 ```
 
-## Return Modes
+## 🔄Return Modes
 
 - **`initial-position`**: Returns to the initial position after drag.
+<p align="center">
+<img src="https://github.com/user-attachments/assets/a977930c-1442-4138-a0f1-658838d046c7" width=400px center>
+</p>
 
 
 - **`none`**: Stays at the dropped position.
-
+<p align="center">
+<img src="https://github.com/user-attachments/assets/27eec1d3-3eec-471a-b5ea-e1425a39cbc6" width=400px center>
+</p>
 
 - **`closest-axis-x`**: Snaps to the closest horizontal edge.
-
+<p align="center">
+<img src="https://github.com/user-attachments/assets/542abe7e-2861-4f51-b2e1-05c311e179e5" width=400px center>
+</p>
 
 - **`closest-axis-y`**: Snaps to the closest vertical edge.
-
+<p align="center">
+<img src="https://github.com/user-attachments/assets/ffa3972c-2976-4907-9439-6319be64196b" width=400px center>
+</p>
 
 - **`closest-axis`**: Snaps to the closest edge.
+<p align="center">
+<img src="https://github.com/user-attachments/assets/037d67d3-8fb8-44bc-abdb-89537de4edf3" width=400px center>
+</p>
 
 
-
-## Notes
+## 📝Notes
 
 - Ensure the `initialPosition` prop is within the screen bounds.
 - Use `maxDistance` and `minDistance` to control drag limits and trigger conditions.
 - For gesture handling, wrap the component with `GestureHandlerRootView`.
+- If you need to change the animations of the button, override custom values with scaleCustomConfig, dragCustomConfig and returnCustomConfig configs.
 
-## License
+## 🤝Contributing
+
+Contributions are welcome! Please open an issue or submit a pull request, and let a 🌟 if you liked my work! 🤗
+
+## 📜License
 
 This component is open-source and available under the MIT License.  
