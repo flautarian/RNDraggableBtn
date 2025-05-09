@@ -4,5 +4,5 @@ module.exports = {
   preset: 'react-native',
   // this is specific to the Jest repo, not generally needed (the files we ignore will be in node_modules which is ignored by default)
   transformIgnorePatterns: [resolve(__dirname, '../../packages')],
-  setupFiles: ['./jest-setup.js'],
+  setupFiles: ['./jest-setup.js', "./node_modules/react-native-gesture-handler/jestSetup.js"],
 };

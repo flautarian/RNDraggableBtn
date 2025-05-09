@@ -89,7 +89,7 @@ export const DraggableButton = ({
         if (canMove)
           onDrag(gestureState);
       },
-      onPanResponderRelease: (_, gestureState) => {
+      onPanResponderEnd: (_, gestureState) => {
         onDragRelease(gestureState);
       },
     })
